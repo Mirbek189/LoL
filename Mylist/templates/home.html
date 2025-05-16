@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru" class="transition duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxTime — Главная</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition duration-300">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-4 shadow-md bg-white dark:bg-gray-800 sticky top-0 z-50">
+    <div class="text-2xl font-bold text-gray-900 dark:text-white">LuxTime</div>
+    <div class="flex items-center gap-4">
+      <!-- Search -->
+      <form method="get" class="hidden md:block">
+        <input
+          type="text"
+          name="q"
+          placeholder="Поиск товаров..."
+          value="{{ request.GET.q }}"
+          class="px-4 py-1.5 border rounded-full bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
+      </form>
+      <!-- Theme Switch -->
+      <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+        🌙
+      </button>
+    </div>
+  </header>
+
+  <main class="flex flex-col lg:flex-row gap-6 p-6">
+    <!-- Filters -->
+    <aside class="lg:w-1/4 space-y-4">
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <h2 class="text-lg font-semibold mb-2">Бренд</h2>
+        <form method="get">
+          {% for brand in brands %}
+            <label class="block">
+              {% for brand in brands %}
+  <label class="block">
+    <input type="checkbox" name="brand" value="{{ brand }}" {% if brand in selected_brands %}checked{% endif %} />
+    {{ brand }}
+  </label>
+{% endfor %}
+
+              {{ brand }}
+            </label>
+          {% endfor %}
+        </form>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <h2 class="text-lg font-semibold mb-2">Цена</h2>
+        <form method="get" class="flex flex-col gap-2">
+          <input type="number" name="min_price" placeholder="от" class="p-2 rounded bg-gray-100 dark:bg-gray-700" />
+          <input type="number" name="max_price" placeholder="до" class="p-2 rounded bg-gray-100 dark:bg-gray-700" />
+          <button type="submit" class="bg-black text-white dark:bg-white dark:text-black py-1 rounded">Фильтр</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Products -->
+    <section class="lg:w-3/4">
+      <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
+        {% for product in products %}
+          <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow hover:shadow-xl transition cursor-pointer product-card">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover rounded-md mb-3">
+            <h3 class="font-semibold text-lg">{{ product.name }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ product.description|truncatechars:80 }}</p>
+            <div class="mt-2 font-bold text-indigo-600 dark:text-indigo-400">{{ product.price }} ₽</div>
+            <button class="add-to-cart mt-2 bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600">Добавить</button>
+          </div>
+        {% empty %}
+          <p>Нет товаров по выбранным параметрам.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <!-- About -->
+  <section class="p-6 text-center max-w-3xl mx-auto">
+    <h2 class="text-2xl font-bold mb-2">О нас</h2>
+    <p>LuxTime — это премиальные часы, сочетающие стиль, точность и надёжность. Мы предлагаем коллекции от ведущих брендов мира.</p>
+  </section>
+
+  <footer class="text-center py-4 bg-white dark:bg-gray-800 mt-10">
+    &copy; 2025 LuxTime — Все права защищены
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const storedTheme = localStorage.getItem('theme');
+
+    if (storedTheme === 'dark') {
+      html.classList.add('dark');
+    }
+
+    toggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Add to cart (AJAX заглушка)
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        alert('Товар добавлен в корзину (AJAX-заглушка)');
+      });
+    });
+
+    // Анимация fade-in при загрузке
+    document.getElementById('productList').classList.add('opacity-0');
+    window.addEventListener('load', () => {
+      document.getElementById('productList').classList.remove('opacity-0');
+      document.getElementById('productList').classList.add('opacity-100');
+    });
+  </script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+  </style>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {% for product in products %}
+  <div class="border rounded-lg p-4 shadow hover:shadow-lg transition">
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-md mb-2" />
+    <h3 class="text-lg font-semibold mb-1">{{ product.name }}</h3>
+    <p class="text-sm text-gray-600 mb-2">{{ product.brand }}</p>
+    <p class="text-green-600 font-bold mb-3">${{ product.price }}</p>
+    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      В корзину
+    </button>
+  </div>
+  {% endfor %}
+</div>
+
+</body>
+</html>
+
