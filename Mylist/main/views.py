@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from .models import Product
+from django.shortcuts import render, redirect
+from pyexpat.errors import messages
 
+from .models import Product
+from .forms import RegisterForm
 def home(request):
     selected_brands = request.GET.getlist('brand')
     min_price = request.GET.get('min_price')
@@ -30,3 +32,35 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+
+
+
+def registration(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return redirect('login_user')
+    else:
+        form = RegisterForm()
+    return render(request, 'registration.html', {'form': form})
+
+
+
+
+from django.contrib.auth import authenticate, login
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Неверное имя пользователя или пароль.')
+            return redirect('login_user')
+
+    return render(request, 'login.html')
