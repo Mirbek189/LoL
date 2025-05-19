@@ -49,6 +49,7 @@ def registration(request):
 
 
 from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 
 def login_user(request):
     if request.method == 'POST':
@@ -60,7 +61,8 @@ def login_user(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Неверное имя пользователя или пароль.')
-            return redirect('login_user')
+            return render(request, 'login.html', {'error': 'Неверное имя пользователя или пароль'})
 
     return render(request, 'login.html')
+
+
