@@ -18,7 +18,9 @@
     .hero {
       position: relative;
       height: 100vh;
-      background: #333;
+      background-image: url('https://cdn.pixabay.com/photo/2020/01/31/08/38/rolex-4807479_960_720.jpg');
+      background-size: cover; /* Изображение растягивается по экрану */
+      background-position: center; /* Центрируем изображение */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -118,7 +120,6 @@
     .nav-bar .register-btn:hover {
       background-color: #FF5B00;
     }
-
   </style>
 </head>
 <body>
@@ -127,8 +128,8 @@
   <header class="nav-bar">
     <ul>
       <li><a href="#">Главная</a></li>
-      <li><a href="#">О нас</a></li>
-      <li><a href="#">Часы</a></li>
+      <li><a href="about">О нас</a></li>
+      <li><a href="#">Личный кабинет</a></li>
       <li><a href="#">Контакты</a></li>
     </ul>
     <a href="registration"><button class="register-btn">Регистрация</button></a>
@@ -139,10 +140,14 @@
     <div>
       <h1>Эксклюзивные Часы LuxTime</h1>
       <p>Непревзойденный стиль, точность и надежность. Часы, которые говорят за себя.</p>
-      <button class="btn">Просмотреть Коллекцию</button>
+      <a href="collections">
+        <button class="btn">Просмотреть Коллекцию</button>
+      </a>
     </div>
   </section>
-<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-<dotlottie-player src="https://lottie.host/a88c8aab-d125-4d31-b119-50f86da401a4/uCGZKgcKVC.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <dotlottie-player src="https://lottie.host/a88c8aab-d125-4d31-b119-50f86da401a4/uCGZKgcKVC.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+
 </body>
 </html>
